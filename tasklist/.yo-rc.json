@@ -1,0 +1,8 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "version": "1.4.1",
+    "libraryName": "tasklist",
+    "libraryId": "8d8edf16-d3f0-449c-aa50-b2f86b0d17f0",
+    "environment": "spo"
+  }
+}
