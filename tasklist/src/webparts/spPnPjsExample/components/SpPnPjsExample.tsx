@@ -17,10 +17,8 @@ export default class SpPnPjsExample extends React.Component<
         <div className={styles.container}>
           <div className={styles.row}>
             <div className={styles.column}>
-              <span className={styles.title}>Welcome to SharePoint!</span>
-              <p className={styles.subTitle}>
-                Customize SharePoint experiences using Web Parts.
-              </p>
+              <span className={styles.title}>Timeline Tasks</span>
+              <p className={styles.subTitle}>REST API using sp-pnp-js.</p>
               <p className={styles.description}>
                 {escape(this.props.description)}
               </p>

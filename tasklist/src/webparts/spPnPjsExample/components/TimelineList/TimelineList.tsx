@@ -16,7 +16,17 @@ export class TimelineList extends React.Component<
   constructor(props: ITimelineListProps) {
     super(props);
     this.state = {
-      list: []
+      list: [],
+      dates: [
+        "2018-05-21T14:00:00Z",
+        "2018-05-22T14:00:00Z",
+        "2018-05-23T14:00:00Z",
+        "2018-05-24T14:00:00Z",
+        "2018-05-25T14:00:00Z",
+        "2018-05-26T14:00:00Z",
+        "2018-05-27T14:00:00Z"
+      ],
+      start_date: this.props.start_date
     };
   }
 
@@ -24,19 +34,28 @@ export class TimelineList extends React.Component<
     console.log("test-render");
     return (
       <div>
-        {this.state.list.map((item, i) => {
-          console.log(item.Title);
-          console.log(item.StartDate);
-          console.log(item.Status);
-          console.log(item.Priority);
+        {this.state.dates.map((date, index) => {
+          // get an array of objects and iterate through each object.
+          const taskItems = this.state.list.filter(x => x.StartDate == date); // get an array of objects with filter of start date.
           return (
-            <div key={i}>
-              <div>{item.Title}</div>
-              <div>{item.Status}</div>
-              <div>{item.Priority}</div>
-              <div>{item.StartDate}</div>
-              <div>{item.AuthorId}</div>
-              <div>{item.DueDate}</div>
+            <div>
+              <table>
+                <tr>
+                  <th>{date}</th>
+                </tr>
+                <tr>
+                  <th>
+                    {taskItems.map(taskItem => {
+                      return (
+                        <div>
+                          <div>Task Title: {taskItem.Title}</div>
+                          <div>Task Startdate: {taskItem.StartDate}</div>
+                        </div>
+                      );
+                    })}
+                  </th>
+                </tr>
+              </table>
             </div>
           );
         })}
@@ -55,6 +74,31 @@ export class TimelineList extends React.Component<
           list: items
         });
       });
+  }
+
+  private _getTask(taskId: any): any {
+    console.log("get-tasks");
+    return this.state.list.filter(
+      (task: any) => task.AuthorId == taskId.taskId
+    );
+  }
+
+  private _getDate(index: number): string {
+    console.log("get-date");
+    let thisDate: string = this.state.dates[index];
+    return thisDate;
+  }
+
+  private _checkTaskWithStartDate(): string {
+    console.log("check-task-startdate");
+    let start_date: string;
+    for (let i = 0; i < this.state.list.length; i++) {
+      for (let j = 0; j < this.state.dates.length; j++) {
+        if (this.state.list[i].StartDate == this.state.dates[j]) {
+          return (start_date = this._getDate(j));
+        }
+      }
+    }
   }
 
   private _getWebDetails(): void {
