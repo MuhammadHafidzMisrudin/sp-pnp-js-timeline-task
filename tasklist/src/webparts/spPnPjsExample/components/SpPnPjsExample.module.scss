@@ -67,4 +67,41 @@
       display: inline-block;
     }
   }
+  .containerTable {
+    background-color: aqua;
+    position: relative;
+    max-width: 2000px;
+    height: 200px;
+    overflow-x: scroll;
+    overflow-y: scroll;
+  }
+  .mainTable {
+    list-style-type: none;
+    max-width: 2000px;
+    width: 2000px;
+    margin: 0;
+    padding: 0;
+  }
+  .listDateCell {
+    float: left;
+    .date {
+      display: block;
+      color: black;
+      text-align: left;
+      border-left: 1px black solid;
+      border-bottom: 2px black solid;
+      padding: 10px;
+      margin-right: 0px;
+      text-decoration: none;
+    }
+  }
+  .infoCell {
+    border: none;
+  }
+  .listInfoTask {
+    color: red;
+    list-style-type: circle;
+    padding: 0px;
+    margin: 0px;
+  }
 }

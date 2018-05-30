@@ -3,6 +3,7 @@ import { ITimelineListProps } from "../TimelineList";
 import { ITimelineListState } from "../TimelineList";
 import pnp, { Item, sp } from "sp-pnp-js";
 import { List } from "office-ui-fabric-react/lib/List";
+import styles from "../SpPnPjsExample.module.scss";
 
 interface web {
   Title: string;
@@ -23,6 +24,7 @@ export class TimelineList extends React.Component<
     this._setDateArray = this._setDateArray.bind(this);
     this._taskDetails = this._taskDetails.bind(this);
     this._formatListDates = this._formatListDates.bind(this);
+    this._formatMonthDay = this._formatMonthDay.bind(this);
   }
 
   public render(): React.ReactElement<ITimelineListProps> {
@@ -30,7 +32,7 @@ export class TimelineList extends React.Component<
     //console.dir(this.state.date_range);
     return (
       <div>
-        <div>
+        <div className={styles.containerTable}>
           {this.state.date_range.map((date, index) => {
             //console.log("------");
             //console.log(date);
@@ -43,26 +45,28 @@ export class TimelineList extends React.Component<
             return (
               // note: JSX cannot output objects.
               // must convert to string.
-              <table>
-                <tr>
-                  <th>{date}</th>
-                </tr>
-                <tr>
-                  <td>
-                    {taskItems.map(taskItems => {
-                      return (
-                        <div>
-                          <span>{taskItems.Title}</span>&nbsp;
+              <ul className={styles.mainTable}>
+                <li className={styles.listDateCell}>
+                  <span className={styles.date}>
+                    {this._formatMonthDay(date)}
+                  </span>
+                  {taskItems.map(taskItems => {
+                    return (
+                      <ul className={styles.infoCell}>
+                        <li className={styles.listInfoTask}>
+                          <span>{taskItems.Title}</span>
+                        </li>
+                        <li className={styles.listInfoTask}>
                           <span>
-                            {this._formatListDates(taskItems.StartDate)} -{" "}
-                            {this._formatListDates(taskItems.DueDate)}
+                            {this._formatMonthDay(taskItems.StartDate)} -{" "}
+                            {this._formatMonthDay(taskItems.DueDate)}
                           </span>
-                        </div>
-                      );
-                    })}
-                  </td>
-                </tr>
-              </table>
+                        </li>
+                      </ul>
+                    );
+                  })}
+                </li>
+              </ul>
             );
           })}
         </div>
@@ -128,7 +132,33 @@ export class TimelineList extends React.Component<
     return newDateFormat.toDateString();
   }
 
-  private _taskDetails(): any {
+  private _formatMonthDay(x: any): any {
+    console.log("format-month-day");
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ];
+    let newDateFormat = new Date(x);
+    let month = newDateFormat.getMonth();
+    let day = newDateFormat.getDate();
+    //console.log(monthNames[month]);
+    //console.log(day);
+    let newFormat = `${monthNames[month]} ${day}`;
+    //console.log(newFormat);
+    return newFormat;
+  }
+
+  private _taskDetails(x: any): any {
     console.log("task-details");
   }
 
@@ -145,3 +175,45 @@ export class TimelineList extends React.Component<
     });
   }
 }
+
+/*
+<table className={styles.mainTable}>
+  <tr className={styles.rowTable}>
+    <th className={styles.headerTable}>
+      {this._formatMonthDay(date)}
+    </th>
+  </tr>
+  <tr className={styles.rowTable}>
+    <td className={styles.standardCell}>
+      {taskItems.map(taskItems => {
+        return (
+          <div>
+            <p className={styles.info}>{taskItems.Title}</p>
+            <p>
+              {this._formatMonthDay(taskItems.StartDate)} -{" "}
+              {this._formatMonthDay(taskItems.DueDate)}
+            </p>
+          </div>
+        );
+      })}
+    </td>
+  </tr>
+</table>
+
+
+<tr className={styles.rowTable}>
+  <td>
+    {taskItems.map(taskItems => {
+      return (
+        <div>
+          <span>{taskItems.Title}</span>&nbsp;
+          <span>
+            {this._formatMonthDay(taskItems.StartDate)} -{" "}
+            {this._formatMonthDay(taskItems.DueDate)}
+          </span>
+        </div>
+      );
+    })}
+  </td>
+</tr>
+*/
