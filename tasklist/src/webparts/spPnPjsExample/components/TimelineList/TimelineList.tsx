@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ITimelineListProps } from "../TimelineList";
 import { ITimelineListState } from "../TimelineList";
-import pnp from "sp-pnp-js";
+import pnp, { Item, sp } from "sp-pnp-js";
 import { List } from "office-ui-fabric-react/lib/List";
 
 interface web {
@@ -22,6 +22,7 @@ export class TimelineList extends React.Component<
     };
     this._setDateArray = this._setDateArray.bind(this);
     this._taskDetails = this._taskDetails.bind(this);
+    this._formatListDates = this._formatListDates.bind(this);
   }
 
   public render(): React.ReactElement<ITimelineListProps> {
@@ -31,7 +32,14 @@ export class TimelineList extends React.Component<
       <div>
         <div>
           {this.state.date_range.map((date, index) => {
+            //console.log("------");
+            //console.log(date);
+            //console.log("------");
+            const taskItems = this.state.list.filter(
+              x => this._formatListDates(x.StartDate) == date
+            );
             //console.dir(date);
+            //console.log(taskItems);
             return (
               // note: JSX cannot output objects.
               // must convert to string.
@@ -40,7 +48,19 @@ export class TimelineList extends React.Component<
                   <th>{date}</th>
                 </tr>
                 <tr>
-                  <td>{this._taskDetails()}</td>
+                  <td>
+                    {taskItems.map(taskItems => {
+                      return (
+                        <div>
+                          <span>{taskItems.Title}</span>&nbsp;
+                          <span>
+                            {this._formatListDates(taskItems.StartDate)} -{" "}
+                            {this._formatListDates(taskItems.DueDate)}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </td>
                 </tr>
               </table>
             );
@@ -66,14 +86,18 @@ export class TimelineList extends React.Component<
 
   private _setDateArray(): any[] {
     console.log("set-date-array");
+    let s_date = new Date("2018-05-14");
+    let e_date = new Date("2018-06-14");
     let current_date = new Date();
-    console.log(current_date);
-    let start_date = new Date(current_date.setDate(current_date.getDate() - 7));
-    console.log(start_date);
-    let end_date = new Date(current_date.setDate(current_date.getDate() + 7));
-    let newEndDate = current_date.setDate(current_date.getDate() + 7);
+    //console.log(current_date);
+    let start_date = new Date(
+      current_date.setDate(current_date.getDate() - 13)
+    );
+    //console.log(start_date);
+    let end_date = new Date(current_date.setDate(current_date.getDate() + 10));
+    let newEndDate = current_date.setDate(current_date.getDate() + 10);
     end_date = new Date(newEndDate);
-    console.log(end_date);
+    //console.log(end_date);
 
     let date_array = new Array();
     while (start_date <= end_date) {
@@ -81,7 +105,7 @@ export class TimelineList extends React.Component<
       let countDate = start_date.setDate(start_date.getDate() + 1);
       start_date = new Date(countDate);
     }
-    console.log(date_array);
+    //console.log(date_array);
     date_array = this._formatDates(date_array);
     return date_array;
   }
@@ -93,25 +117,19 @@ export class TimelineList extends React.Component<
       let dateFormat = new Date(array[index]);
       temp.push(dateFormat.toDateString());
     }
+    //console.log(temp);
     return temp;
+  }
+
+  private _formatListDates(x: any): any {
+    console.log("format-list-dates");
+    let newDateFormat = new Date(x);
+    //console.log(newDateFormat.toDateString());
+    return newDateFormat.toDateString();
   }
 
   private _taskDetails(): any {
     console.log("task-details");
-    let temp = new Array();
-    let taskItems: any = [];
-    this.state.list.map(item => {
-      let newListDateFormat = new Date(item.StartDate);
-      //console.log(newListDateFormat.toDateString());
-      this.state.date_range.map(date => {
-        let newRangeDateFormat = new Date(date);
-        //console.log(newRangeDateFormat.toDateString());
-        taskItems = this.state.list.filter(
-          x => x.StartDate.toString() == newRangeDateFormat.toDateString()
-        );
-      });
-    });
-    console.log(taskItems);
   }
 
   // debug test
