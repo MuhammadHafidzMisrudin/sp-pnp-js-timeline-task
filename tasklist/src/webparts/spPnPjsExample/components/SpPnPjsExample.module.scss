@@ -81,6 +81,7 @@
     width: 2000px;
     margin: 0;
     padding: 0;
+    outline: 1px black solid;
   }
   .listDateCell {
     float: left;
@@ -89,19 +90,41 @@
       color: black;
       text-align: left;
       border-left: 1px black solid;
-      border-bottom: 2px black solid;
-      padding: 10px;
+      padding: 20px;
       margin-right: 0px;
       text-decoration: none;
     }
   }
   .infoCell {
     border: none;
+    padding: 0px;
+    margin: 20px;
   }
   .listInfoTask {
     color: red;
     list-style-type: circle;
     padding: 0px;
     margin: 0px;
+  }
+  .popup {
+    position: fixed;
+    width: 50%;
+    height: 50%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+  }
+  .popup_inner {
+    position: absolute;
+    left: 25%;
+    right: 25%;
+    top: 25%;
+    bottom: 25%;
+    margin: auto;
+    background: lightblue;
+    font-display: block;
+    color: red;
   }
 }

@@ -4,6 +4,7 @@ import { ITimelineListState } from "../TimelineList";
 import pnp, { Item, sp } from "sp-pnp-js";
 import { List } from "office-ui-fabric-react/lib/List";
 import styles from "../SpPnPjsExample.module.scss";
+import { values } from "@uifabric/utilities/lib";
 
 interface web {
   Title: string;
@@ -19,12 +20,17 @@ export class TimelineList extends React.Component<
     super(props);
     this.state = {
       list: [],
-      date_range: []
+      date_range: [],
+      check_info: false,
+      item: {}
     };
     this._setDateArray = this._setDateArray.bind(this);
     this._taskDetails = this._taskDetails.bind(this);
     this._formatListDates = this._formatListDates.bind(this);
     this._formatMonthDay = this._formatMonthDay.bind(this);
+    this._handleClickData = this._handleClickData.bind(this);
+    this._taskDetails = this._taskDetails.bind(this);
+    this._dueDatePeriod = this._dueDatePeriod.bind(this);
   }
 
   public render(): React.ReactElement<ITimelineListProps> {
@@ -50,19 +56,22 @@ export class TimelineList extends React.Component<
                   <span className={styles.date}>
                     {this._formatMonthDay(date)}
                   </span>
-                  {taskItems.map(taskItems => {
+                  {taskItems.map((taskItem, index) => {
                     return (
-                      <ul className={styles.infoCell}>
-                        <li className={styles.listInfoTask}>
-                          <span>{taskItems.Title}</span>
-                        </li>
-                        <li className={styles.listInfoTask}>
-                          <span>
-                            {this._formatMonthDay(taskItems.StartDate)} -{" "}
-                            {this._formatMonthDay(taskItems.DueDate)}
-                          </span>
-                        </li>
-                      </ul>
+                      <div onClick={this._handleClickData(taskItem)}>
+                        {this._taskDetails(taskItem)}
+                        <ul className={styles.infoCell}>
+                          <li className={styles.listInfoTask}>
+                            <span>{taskItem.Title}</span>
+                          </li>
+                          <li className={styles.listInfoTask}>
+                            <span>
+                              {this._formatMonthDay(taskItem.StartDate)} -{" "}
+                              {this._formatMonthDay(taskItem.DueDate)}
+                            </span>
+                          </li>
+                        </ul>
+                      </div>
                     );
                   })}
                 </li>
@@ -115,7 +124,7 @@ export class TimelineList extends React.Component<
   }
 
   private _formatDates(array: any[]): any[] {
-    console.log("test-format-date");
+    //console.log("test-format-date");
     let temp = new Array();
     for (let index = 0; index < array.length; index++) {
       let dateFormat = new Date(array[index]);
@@ -126,7 +135,7 @@ export class TimelineList extends React.Component<
   }
 
   private _formatListDates(x: any): any {
-    console.log("format-list-dates");
+    //console.log("format-list-dates");
     let newDateFormat = new Date(x);
     //console.log(newDateFormat.toDateString());
     return newDateFormat.toDateString();
@@ -158,8 +167,41 @@ export class TimelineList extends React.Component<
     return newFormat;
   }
 
-  private _taskDetails(x: any): any {
+  private _handleClickData(data: any): any {
+    this.setState({
+      check_info: !this.state.check_info,
+      item: data
+    });
+    console.log(
+      "this is check {from handle-click-data}: ",
+      this.state.check_info
+    );
+    console.log("this is item {from handle-click-data}: ", this.state.item);
+    //this._taskDetails(this.state.item);
+  }
+
+  private _taskDetails(data: any): any {
     console.log("task-details");
+    console.log("handle-click-data");
+    if (this.state.check_info) {
+      console.log("data clicked");
+      return (
+        <div className={styles.popup}>
+          <div className={styles.popup_inner}>
+            <p>Title: {data.Title}</p>
+            <p>Due Date: {this._formatMonthDay(data.DueDate)}</p>
+            <p>Assigned To: {data.AuthorId}</p>
+            <p>Due {this._dueDatePeriod()} days ago</p>
+          </div>
+        </div>
+      );
+    }
+  }
+
+  private _dueDatePeriod(): string {
+    console.log("due-date-period");
+    let num: number = 6;
+    return `${num}`;
   }
 
   // debug test
