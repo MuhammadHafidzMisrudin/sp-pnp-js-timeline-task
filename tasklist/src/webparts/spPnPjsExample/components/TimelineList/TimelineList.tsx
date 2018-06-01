@@ -22,7 +22,7 @@ export class TimelineList extends React.Component<
       list: [],
       date_range: [],
       check_info: false,
-      item: {}
+      selected_item: {}
     };
     this._setDateArray = this._setDateArray.bind(this);
     this._taskDetails = this._taskDetails.bind(this);
@@ -58,8 +58,7 @@ export class TimelineList extends React.Component<
                   </span>
                   {taskItems.map((taskItem, index) => {
                     return (
-                      <div onClick={this._handleClickData(taskItem)}>
-                        {this._taskDetails(taskItem)}
+                      <div onClick={() => this._handleClickData(taskItem)}>
                         <ul className={styles.infoCell}>
                           <li className={styles.listInfoTask}>
                             <span>{taskItem.Title}</span>
@@ -74,6 +73,10 @@ export class TimelineList extends React.Component<
                       </div>
                     );
                   })}
+
+                  {/*(this.state.selected_item !== null) ? (<div>Info</div>) : (<div>Null</div>)
+                    // implement Popup.
+                  */}
                 </li>
               </ul>
             );
@@ -167,41 +170,58 @@ export class TimelineList extends React.Component<
     return newFormat;
   }
 
-  private _handleClickData(data: any): any {
+  private _handleClickData(event): any {
+    console.log("handle-click-data");
+    console.log("this object {from handle-click-data}: ", event);
     this.setState({
       check_info: !this.state.check_info,
-      item: data
+      selected_item: event
     });
-    console.log(
-      "this is check {from handle-click-data}: ",
-      this.state.check_info
-    );
-    console.log("this is item {from handle-click-data}: ", this.state.item);
-    //this._taskDetails(this.state.item);
+    console.log("item checked: ", this.state.check_info);
+    console.log("selected item: ", this.state.selected_item);
+    return <div>{this._taskDetails(event, this.state.check_info)}</div>;
   }
 
-  private _taskDetails(data: any): any {
-    console.log("task-details");
-    console.log("handle-click-data");
-    if (this.state.check_info) {
-      console.log("data clicked");
+  private _taskDetails(event, _clicked: boolean): any {
+    console.log("task-details-show-info");
+    console.log("this is object {from task-details}: ", event);
+    let c_date = new Date();
+    if (_clicked) {
+      console.log("data-clicked-show-info", _clicked);
       return (
         <div className={styles.popup}>
           <div className={styles.popup_inner}>
-            <p>Title: {data.Title}</p>
-            <p>Due Date: {this._formatMonthDay(data.DueDate)}</p>
-            <p>Assigned To: {data.AuthorId}</p>
-            <p>Due {this._dueDatePeriod()} days ago</p>
+            <p>Title: {event.Title}</p>
+            <p>Due Date: {this._formatMonthDay(event.DueDate)}</p>
+            <p>Assigned To: {event.AuthorId}</p>
+            <p>Due {this._dueDatePeriod(c_date, event.DueDate)} days ago</p>
+          </div>
+        </div>
+      );
+    } else {
+      console.log("data-not-clicked", _clicked);
+      return (
+        <div className={styles.popup}>
+          <div className={styles.popup_inner}>
+            <p>Title: {event.Title}</p>
+            <p>Due Date: {this._formatMonthDay(event.DueDate)}</p>
+            <p>Assigned To: {event.AuthorId}</p>
+            <p>Due {this._dueDatePeriod(c_date, event.DueDate)} days ago</p>
           </div>
         </div>
       );
     }
   }
 
-  private _dueDatePeriod(): string {
+  private _dueDatePeriod(curr_date: any, due_date: any): any {
     console.log("due-date-period");
-    let num: number = 6;
-    return `${num}`;
+    let date1 = new Date(curr_date);
+    console.log("current date: ", date1);
+    let date2 = new Date(due_date);
+    console.log("due date: ", date2);
+
+    let due_period: any = 0;
+    return `${due_period}`;
   }
 
   // debug test
