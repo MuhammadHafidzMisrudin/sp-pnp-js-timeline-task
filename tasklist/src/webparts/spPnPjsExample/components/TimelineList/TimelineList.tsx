@@ -217,7 +217,7 @@ export class TimelineList extends React.Component<
             <p>Title: {event.Title}</p>
             <p>Due Date: {this._formatMonthDay(event.DueDate)}</p>
             <p>Assigned To: {event.AuthorId}</p>
-            <p>Due {this._dueDatePeriod(c_date, event.DueDate)} days ago</p>
+            <p>Due {this._dueDatePeriod(c_date, event.DueDate)}</p>
           </div>
         </div>
       );
@@ -227,12 +227,59 @@ export class TimelineList extends React.Component<
   private _dueDatePeriod(curr_date: any, due_date: any): any {
     console.log("due-date-period");
     let date1 = new Date(curr_date);
-    console.log("current date: ", date1);
+    //let date1 = new Date("2018-06-3");
+    //console.log("current date: ", date1);
     let date2 = new Date(due_date);
-    console.log("due date: ", date2);
-
+    //console.log("due date: ", date2);
+    let date_date1 = date1.getDate();
+    let month_date1 = date1.getMonth();
+    let date_date2 = date2.getDate();
+    let month_date2 = date2.getMonth();
     let due_period: any = 0;
-    return `${due_period}`;
+    let outputInterval: any;
+    console.log("date for curr_date date1: ", date_date1);
+    console.log("month for curr_date date1: ", month_date1);
+    console.log("date for due_date date2: ", date_date2);
+    console.log("month for due_date date2: ", month_date2);
+    //console.log(month_date2 % 2);
+
+    if (month_date1 == month_date2) {
+      // dates are in the same month
+      if (date_date1 > date_date2) {
+        due_period = date_date1 - date_date2;
+        outputInterval = `${due_period} days ago.`;
+      } else {
+        due_period = date_date2 - date_date1;
+        outputInterval = `in ${due_period} days.`;
+      }
+    } else {
+      // dates are in different month
+      if (month_date1 > month_date2) {
+        console.log("dates are in different month");
+        if (month_date2 % 2 == 0) {
+          if (date_date1 > date_date2) {
+            date_date2 = 31 - date_date2;
+            due_period = date_date1 + date_date2;
+            outputInterval = `${due_period} days ago.`;
+          } else {
+            date_date2 = 31 - date_date2;
+            due_period = date_date2 + date_date1;
+            outputInterval = `${due_period} days ago.`;
+          }
+        } else {
+          if (date_date1 > date_date2) {
+            date_date2 = 30 - date_date2;
+            due_period = date_date1 + date_date2;
+            outputInterval = `${due_period} days ago.`;
+          } else {
+            date_date2 = 30 - date_date2;
+            due_period = date_date2 + date_date1;
+            outputInterval = `${due_period} days ago.`;
+          }
+        }
+      }
+    }
+    return outputInterval;
   }
 
   // debug test
