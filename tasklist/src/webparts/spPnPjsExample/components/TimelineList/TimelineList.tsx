@@ -22,13 +22,15 @@ export class TimelineList extends React.Component<
       list: [],
       date_range: [],
       check_info: false,
-      selected_item: {}
+      selected_item: {},
+      data_closed: true
     };
     this._setDateArray = this._setDateArray.bind(this);
     this._taskDetails = this._taskDetails.bind(this);
     this._formatListDates = this._formatListDates.bind(this);
     this._formatMonthDay = this._formatMonthDay.bind(this);
     this._handleClickData = this._handleClickData.bind(this);
+    this._handleCloseButton = this._handleCloseButton.bind(this);
     this._taskDetails = this._taskDetails.bind(this);
     this._dueDatePeriod = this._dueDatePeriod.bind(this);
   }
@@ -180,11 +182,21 @@ export class TimelineList extends React.Component<
     console.log("this object {from handle-click-data}: ", event);
     this.setState({
       check_info: !this.state.check_info,
-      selected_item: event
+      selected_item: event,
+      data_closed: false
     });
     console.log("item checked: ", this.state.check_info);
     console.log("selected item: ", this.state.selected_item);
     return <div>{this._taskDetails(event, this.state.check_info)}</div>;
+  }
+
+  private _handleCloseButton(event): any {
+    console.log("closed.");
+    event = null;
+    this.setState({
+      selected_item: event,
+      check_info: !this.state.check_info
+    });
   }
 
   private _taskDetails(event, _clicked: boolean): any {
@@ -196,6 +208,12 @@ export class TimelineList extends React.Component<
       return (
         <div className={styles.popup}>
           <div className={styles.popup_inner}>
+            <button
+              type="button"
+              onClick={() => this._handleCloseButton(event)}
+            >
+              X
+            </button>
             <p>Title: {event.Title}</p>
             <p>Due Date: {this._formatMonthDay(event.DueDate)}</p>
             <p>Assigned To: {event.AuthorId}</p>

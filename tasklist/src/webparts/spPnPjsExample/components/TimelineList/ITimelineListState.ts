@@ -3,4 +3,5 @@ export interface ITimelineListState {
   date_range?: string[];
   check_info?: boolean;
   selected_item?: any;
+  data_closed?: boolean;
 }
