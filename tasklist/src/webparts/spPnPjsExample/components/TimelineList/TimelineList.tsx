@@ -73,14 +73,19 @@ export class TimelineList extends React.Component<
                       </div>
                     );
                   })}
-
-                  {/*(this.state.selected_item !== null) ? (<div>Info</div>) : (<div>Null</div>)
-                    // implement Popup.
-                  */}
                 </li>
               </ul>
             );
           })}
+          {this.state.selected_item !== null && (
+            <div>
+              Add popup section{" "}
+              {this._taskDetails(
+                this.state.selected_item,
+                this.state.check_info
+              )}
+            </div>
+          )}
         </div>
       </div>
     );
@@ -198,18 +203,6 @@ export class TimelineList extends React.Component<
           </div>
         </div>
       );
-    } else {
-      console.log("data-not-clicked", _clicked);
-      return (
-        <div className={styles.popup}>
-          <div className={styles.popup_inner}>
-            <p>Title: {event.Title}</p>
-            <p>Due Date: {this._formatMonthDay(event.DueDate)}</p>
-            <p>Assigned To: {event.AuthorId}</p>
-            <p>Due {this._dueDatePeriod(c_date, event.DueDate)} days ago</p>
-          </div>
-        </div>
-      );
     }
   }
 
@@ -238,6 +231,41 @@ export class TimelineList extends React.Component<
   }
 }
 
+/*(this.state.selected_item !== null) ? (<div>Info</div>) : (<div>Null</div>)
+  implement Popup.
+
+  private _taskDetails(event, _clicked: boolean): any {
+  console.log("task-details-show-info");
+  console.log("this is object {from task-details}: ", event);
+  let c_date = new Date();
+  if (_clicked) {
+    console.log("data-clicked-show-info", _clicked);
+    return (
+      <div className={styles.popup}>
+        <div className={styles.popup_inner}>
+          <p>Title: {event.Title}</p>
+          <p>Due Date: {this._formatMonthDay(event.DueDate)}</p>
+          <p>Assigned To: {event.AuthorId}</p>
+          <p>Due {this._dueDatePeriod(c_date, event.DueDate)} days ago</p>
+        </div>
+      </div>
+    );
+  } else {
+    console.log("data-not-clicked", _clicked);
+    return (
+      <div className={styles.popup}>
+        <div className={styles.popup_inner}>
+          <p>Title: {event.Title}</p>
+          <p>Due Date: {this._formatMonthDay(event.DueDate)}</p>
+          <p>Assigned To: {event.AuthorId}</p>
+          <p>Due {this._dueDatePeriod(c_date, event.DueDate)} days ago</p>
+        </div>
+      </div>
+    );
+  }
+}
+*/
+
 /*
 <table className={styles.mainTable}>
   <tr className={styles.rowTable}>
@@ -261,7 +289,6 @@ export class TimelineList extends React.Component<
     </td>
   </tr>
 </table>
-
 
 <tr className={styles.rowTable}>
   <td>
