@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ITimelineListProps } from "../TimelineList";
 import { ITimelineListState } from "../TimelineList";
-import pnp, { Item, sp } from "sp-pnp-js";
+import pnp, { Item, sp, SearchQuery, SearchResults } from "sp-pnp-js";
 import { List } from "office-ui-fabric-react/lib/List";
 import styles from "../SpPnPjsExample.module.scss";
 import { values } from "@uifabric/utilities/lib";
@@ -55,9 +55,9 @@ export class TimelineList extends React.Component<
               // must convert to string.
               <ul className={styles.mainTable}>
                 <li className={styles.listDateCell}>
-                  <span className={styles.date}>
+                  <div className={styles.date}>
                     {this._formatMonthDay(date)}
-                  </span>
+                  </div>
                   {taskItems.map((taskItem, index) => {
                     return (
                       <div onClick={() => this._handleClickData(taskItem)}>
@@ -99,12 +99,52 @@ export class TimelineList extends React.Component<
       .getByTitle("TimelineTasks")
       .items.get()
       .then((items: any[]) => {
-        console.log(items);
+        console.log("The objects: ", items);
         this.setState({
           list: items,
           date_range: this._setDateArray() // set the state of date range.
         });
       });
+
+    // TODO: To retrieve Assignee's name to add on a popup.
+    pnp.sp.web.lists
+      .getByTitle("TimelineTasks")
+      .items.filter("AssignedToId eq 'Alan'")
+      .getById(1)
+      .get()
+      .then(r => {
+        console.log("user name {object}: ", r);
+        console.log("author id: ", r.AuthorId);
+      });
+
+    // pnp.sp.web.lists
+    //   .getByTitle("TimelineTasks")
+    //   .select("Title", "AllProperties")
+    //   .expand("AllProperties")
+    //   .get()
+    //   .then(r => {
+    //     console.log("Title: ", r);
+    //   });
+
+    // pnp.sp.web.lists
+    //   .getByTitle("TimelineTasks")
+    //   .items.getById(1)
+    //   .update({
+    //     AssignedToStringId: "3"
+    //   })
+    //   .then(i => {
+    //     console.log("result: ", i);
+    //   });
+
+    // pnp.sp.web.lists
+    //   .getById("6961657f-5031-4ce8-b546-6d7a9aca0406")
+    //   .update({
+    //     //Title: "Task today"
+    //     AuthorId: "Alan"
+    //   })
+    //   .then(id => {
+    //     console.log(id);
+    //   });
   }
 
   private _setDateArray(): any[] {
@@ -114,7 +154,7 @@ export class TimelineList extends React.Component<
     let current_date = new Date();
     //console.log(current_date);
     let start_date = new Date(
-      current_date.setDate(current_date.getDate() - 13)
+      current_date.setDate(current_date.getDate() - 14)
     );
     //console.log(start_date);
     let end_date = new Date(current_date.setDate(current_date.getDate() + 10));
@@ -216,7 +256,7 @@ export class TimelineList extends React.Component<
             </button>
             <p>Title: {event.Title}</p>
             <p>Due Date: {this._formatMonthDay(event.DueDate)}</p>
-            <p>Assigned To: {event.AuthorId}</p>
+            <p>Assigned To: {event.AssignedToId.toString()}</p>
             <p>Due {this._dueDatePeriod(c_date, event.DueDate)}</p>
           </div>
         </div>
